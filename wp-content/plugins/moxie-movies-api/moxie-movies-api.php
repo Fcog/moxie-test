@@ -108,4 +108,17 @@ function moxie_movie_remove_meta_boxes() {
 	remove_meta_box( 'postcustom' , 'movies' , 'normal' );
 }
 add_action( 'admin_menu', 'moxie_movie_remove_meta_boxes' );
+
+/*
+* Add API page
+*/
+function moxie_movie_init_external()
+{
+    global $wp_rewrite;
+    $plugin_url = plugins_url( 'movies-api.php', __FILE__ );
+    $plugin_url = substr( $plugin_url, strlen( home_url() ) + 1 );
+
+    $wp_rewrite->add_external_rule( 'movies\.json$', $plugin_url, 'top' );
+}
+add_action( 'init', 'moxie_movie_init_external' );
 ?>
