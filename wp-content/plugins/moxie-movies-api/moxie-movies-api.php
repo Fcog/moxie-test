@@ -10,7 +10,7 @@ License: GPL2 or later
 defined( 'ABSPATH' ) or die( 'Access denied' );
 
 /*
-* Movie Custom Type Definition
+* Movie Custom Type definition
 */
 
 function custom_post_type() {
@@ -56,12 +56,56 @@ function custom_post_type() {
 	register_post_type( 'movies', $args );
 
 }
-
-/* Hook into the 'init' action so that the function
-* Containing our post type registration is not 
-* unnecessarily executed. 
+add_action( 'init', 'custom_post_type', 0 );
+ 
+/*
+* Movie Custom fields definition
 */
 
-add_action( 'init', 'custom_post_type', 0 );
+function moxie_movie_register_meta_boxes(){
+  add_meta_box( 'year_created_meta', 'Year Created', 'moxie_movie_year_created_callback', 'movies', 'normal', 'high' );
+  add_meta_box( 'rating_meta', 'Rating', 'moxie_movie_rating_callback', 'movies', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'moxie_movie_register_meta_boxes' );
 
+function moxie_movie_year_created_callback(){
+  global $post;
+  $custom = get_post_custom( $post->ID );
+  $year_created = $custom[ 'year_created' ][ 0 ];
+  ?>
+  <input name="year_created" value="<?php echo $year_created; ?>" >
+  <?php
+}
+
+function moxie_movie_rating_callback() {
+  global $post;
+  $custom = get_post_custom( $post->ID );
+  $rating = $custom[ 'rating' ][ 0 ];
+  ?>
+  <select name="rating" >
+	  <option value="1" <?php if ($rating == 1) echo "selected"; ?>>1 star</option>
+	  <option value="2" <?php if ($rating == 2) echo "selected"; ?>>2 stars</option>
+	  <option value="3" <?php if ($rating == 3) echo "selected"; ?>>3 stars</option>
+	  <option value="4" <?php if ($rating == 4) echo "selected"; ?>>4 stars</option>
+	  <option value="5" <?php if ($rating == 5) echo "selected"; ?>>5 stars</option>
+  </select>
+  <?php
+}
+
+function moxie_movie_save_meta_box( $post_id ) {
+	global $post;
+ 
+  	update_post_meta( $post->ID, 'year_created', $_POST[ 'year_created' ] );
+  	update_post_meta( $post->ID, 'rating', $_POST[ 'rating' ] );
+}
+add_action( 'save_post', 'moxie_movie_save_meta_box' );
+
+/*
+* Remove unnecesary fields for Movies custom type
+*/
+function moxie_movie_remove_meta_boxes() {
+	remove_meta_box( 'postexcerpt' , 'movies' , 'normal' );
+	remove_meta_box( 'postcustom' , 'movies' , 'normal' );
+}
+add_action( 'admin_menu', 'moxie_movie_remove_meta_boxes' );
 ?>
