@@ -63,17 +63,17 @@ add_action( 'init', 'custom_post_type', 0 );
 */
 
 function moxie_movie_register_meta_boxes(){
-  add_meta_box( 'year_created_meta', 'Year Created', 'moxie_movie_year_created_callback', 'movies', 'normal', 'high' );
+  add_meta_box( 'year_created_meta', 'Year Created', 'moxie_movie_year_released_callback', 'movies', 'normal', 'high' );
   add_meta_box( 'rating_meta', 'Rating', 'moxie_movie_rating_callback', 'movies', 'normal', 'high' );
 }
 add_action( 'add_meta_boxes', 'moxie_movie_register_meta_boxes' );
 
-function moxie_movie_year_created_callback(){
+function moxie_movie_year_released_callback(){
   global $post;
   $custom = get_post_custom( $post->ID );
-  $year_created = $custom[ 'year_created' ][ 0 ];
+  $year_released = $custom[ 'year_released' ][ 0 ];
   ?>
-  <input name="year_created" value="<?php echo $year_created; ?>" >
+  <input name="year_released" value="<?php echo $year_released; ?>" >
   <?php
 }
 
@@ -95,7 +95,7 @@ function moxie_movie_rating_callback() {
 function moxie_movie_save_meta_box( $post_id ) {
 	global $post;
  
-  	update_post_meta( $post->ID, 'year_created', $_POST[ 'year_created' ] );
+  	update_post_meta( $post->ID, 'year_released', $_POST[ 'year_released' ] );
   	update_post_meta( $post->ID, 'rating', $_POST[ 'rating' ] );
 }
 add_action( 'save_post', 'moxie_movie_save_meta_box' );
