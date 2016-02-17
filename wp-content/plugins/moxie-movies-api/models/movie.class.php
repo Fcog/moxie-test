@@ -1,10 +1,8 @@
 <?php
-define( 'WP_USE_THEMES', false );
-
-/** Loads the WordPress Environment and Template */
-require_once( '../../../wp-blog-header.php' );
 
 class Movie {
+
+    const TRANSIENT = 'movies-json';
 
     private $id;
     private $title;

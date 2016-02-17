@@ -9,6 +9,8 @@ License: GPL2 or later
 */
 defined( 'ABSPATH' ) or die( 'Access denied' );
 
+require_once( 'models/movie.class.php' );
+
 /*
 * Movie Custom Type definition
 */
@@ -153,4 +155,18 @@ function moxie_movie_display() {
 }
 add_shortcode( 'moxie-movies', 'moxie_movie_display' );
 
+/*
+* Clears API cache when saving a movie
+*/
+/**
+ * Save post metadata when a post is saved.
+ *
+ * @param int $post_id The post ID.
+ * @param post $post The post object.
+ * @param bool $update Whether this is an existing post being updated or not.
+ */
+function moxie_movie_save( $post_id, $post, $update ) {
+	delete_transient( Movie::TRANSIENT );
+}
+add_action( 'save_post_movies', 'moxie_movie_save', 10, 3 );
 ?>
