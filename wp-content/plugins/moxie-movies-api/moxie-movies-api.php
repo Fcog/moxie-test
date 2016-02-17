@@ -142,7 +142,15 @@ function moxie_movie_display() {
     <div ng-app="myapp">
     	<div ng-controller="MoxieMovieController">
     		<div ng-show="data == null">No movies available yet!</div>
-    		<div ng-repeat="movie in data">
+    		<div ng-hide="data == null">
+    			Order By: 
+    			<select ng-model="orderBySelection">
+    				<option value="title">Title</option>
+    				<option value="year">Year</option>
+    				<option value="rating">Rating</option>
+    			</select>
+    		</div>
+    		<div ng-repeat="movie in data | orderBy: orderBySelection">
 				<h2>{{ movie.title }}</h2>
 				<img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
 				<div ng-bind-html="movie.short_description"></div>
@@ -159,13 +167,6 @@ add_shortcode( 'moxie-movies', 'moxie_movie_display' );
 /*
 * Clears API cache when saving a movie
 */
-/**
- * Save post metadata when a post is saved.
- *
- * @param int $post_id The post ID.
- * @param post $post The post object.
- * @param bool $update Whether this is an existing post being updated or not.
- */
 function moxie_movie_save( $post_id, $post, $update ) {
 	delete_transient( Movie::TRANSIENT );
 }
