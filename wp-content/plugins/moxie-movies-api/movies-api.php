@@ -27,11 +27,10 @@ foreach( $posts as $post ) {
   			'poster_url' => $featured_image[0],
   			'rating' => get_post_meta ( $post->ID, 'rating', true),
   			'year' => get_post_meta ( $post->ID, 'year_created', true),
-  			'short_description' => htmlspecialchars( str_replace( '"' , "'" , $post->post_content ) )
+  			'short_description' => str_replace( '"' , "'" , $post->post_content )
   		);
 }
 
+header('Content-Type: application/json');
 echo json_encode($data);
-
-wp_reset_query();
 ?>

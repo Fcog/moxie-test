@@ -121,4 +121,36 @@ function moxie_movie_init_external()
     $wp_rewrite->add_external_rule( 'movies\.json$', $plugin_url, 'top' );
 }
 add_action( 'init', 'moxie_movie_init_external' );
+
+/*
+* Create shortcode
+*/
+function moxie_movie_wp_enqueue_scripts() {
+    wp_register_script( 'load-angularjs', 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js', array(), '1.0.0', all );
+    wp_register_script( 'load-angularjs-sanitize', 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-sanitize.min.js', array(), '1.0.0', all );
+    wp_register_script( 'load-custom-angularjs', plugins_url( '/js/custom.js', __FILE__ ), array(), '1.0.0', all );    
+}
+add_action( 'wp_enqueue_scripts', 'moxie_movie_wp_enqueue_scripts' );
+
+function moxie_movie_display() {
+	wp_enqueue_script( 'load-angularjs' );
+	wp_enqueue_script( 'load-angularjs-sanitize' );
+	wp_enqueue_script( 'load-custom-angularjs' );
+    ?>
+    <div ng-app="myapp">
+    	<div ng-controller="MoxieMovieController">
+    		<div ng-repeat="movie in data">
+				<h2>{{ movie.title }}</h2>
+				<img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+				<div ng-bind-html="movie.short_description"></div>
+				<div><label>Release Year: </label>{{ movie.year }}</div>
+				<div><label>Rating: </label>{{ movie.rating }}</div>
+				<hr \>
+    		</div>
+    	</div>
+    </div>
+    <?php
+}
+add_shortcode( 'moxie-movies', 'moxie_movie_display' );
+
 ?>
