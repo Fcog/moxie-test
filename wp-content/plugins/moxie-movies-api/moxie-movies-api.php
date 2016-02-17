@@ -141,6 +141,7 @@ function moxie_movie_display() {
     ?>
     <div ng-app="myapp">
     	<div ng-controller="MoxieMovieController">
+    		<div ng-show="data == null">No movies available yet!</div>
     		<div ng-repeat="movie in data">
 				<h2>{{ movie.title }}</h2>
 				<img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
